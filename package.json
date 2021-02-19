@@ -5,15 +5,24 @@
   "scripts": {
     "dev": "next dev -p 5555",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "node-start": "yarn build && nodemon server.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@zeit/next-css": "^1.0.1",
+    "@zeit/next-sass": "^1.0.1",
     "axios": "^0.21.1",
+    "express": "^4.17.1",
     "next": "10.0.7",
+    "next-fonts": "^1.5.1",
+    "next-images": "^1.7.0",
+    "nodemon": "^2.0.7",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-number-format": "^4.4.4",
-    "swr": "^0.4.2"
+    "swr": "^0.4.2",
+    "webpack": "4.44.2"
   }
 }
