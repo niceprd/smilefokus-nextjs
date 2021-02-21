@@ -15,6 +15,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TablePagination,
   TableRow,
@@ -81,7 +82,7 @@ export default function Homepage() {
 
   return (
     <React.Fragment>
-      <Container maxWidth="2xl">
+      <Container maxWidth="xl">
         <Breadcrumb
           options={["Business Insight", "Report", "Member"]}
           select="Member"
@@ -90,7 +91,7 @@ export default function Homepage() {
           Yearly Member 01-Jan-2020 to 31-Dec-2020
         </Typography>
 
-        <div className="root-header">
+        <div className="root-home">
           <Grid container>
             <Grid item xs={4}>
               <Paper
@@ -146,11 +147,7 @@ export default function Homepage() {
           </Grid>
         </div>
         <TableContainer component={Paper}>
-          <Table
-            className="table"
-            aria-label="simple table"
-            style={{ marginTop: 4 }}
-          >
+          <Table className="table" aria-label="table" style={{ marginTop: 4 }}>
             <TableHead style={{ backgroundColor: "#898989" }}>
               <TableRow>
                 <TableCell align="center" className="white-text">
@@ -178,7 +175,13 @@ export default function Homepage() {
             </TableHead>
             <TableBody>
               {filterItems &&
-                filterItems.map((item, i) => (
+                (rowsPerPage > 0
+                  ? filterItems.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : filterItems
+                ).map((item, i) => (
                   <TableRow key={i}>
                     <TableCell component="th" scope="row">
                       {item.customername}
@@ -215,20 +218,71 @@ export default function Homepage() {
                     </TableCell>
                   </TableRow>
                 ))}
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                count={filterItems.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: { "aria-label": "rows per page" },
-                  native: true,
-                }}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
+
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
             </TableBody>
+
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  colSpan={7}
+                  count={filterItems.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: { "aria-label": "rows per page" },
+                    native: true,
+                  }}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+
+              <TableRow>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  colSpan="3"
+                  className="total-text"
+                >
+                  Total
+                </TableCell>
+
+                <TableCell align="center">
+                  <NumberFormat
+                    value={items && items.summary.lifetimevalue}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    className="total-text"
+                  />
+                </TableCell>
+                <TableCell align="right" className="total-text">
+                  {items && items.summary.totaltransaction}
+                </TableCell>
+                <TableCell align="right">
+                  <NumberFormat
+                    value={items && items.summary.totalpoint}
+                    displayType={"text"}
+                    className="total-text"
+                    thousandSeparator={true}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  <NumberFormat
+                    value={items && items.summary.remainingpoint}
+                    displayType={"text"}
+                    className="total-text"
+                    thousandSeparator={true}
+                  />
+                </TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         </TableContainer>
       </Container>
